@@ -9,6 +9,10 @@ def call(Map c = [:]) {
         error "snykToken(credentialsId)은 필수입니다"
     }
 
+    def timestamp = new Date().format('yyyyMMdd_HHmmss')
+    def workspace = pwd()
+    def reportFile = "${workspace}/${timestamp}_snyk_report.json"
+
     withCredentials([
         string(credentialsId: c.snykToken, variable: 'TOKEN')
     ]) {
@@ -20,8 +24,7 @@ def call(Map c = [:]) {
               --project-name=${projectName} \
               ${failOn == false ? '|| true' : ''}
 
-            snyk-to-html -i \
-            /var/jenkins_home/workspace/shared_lib_test/2026-01-19_snyk_report.json
+            snyk-to-html -i ${reportFile}
 
             snyk monitor \
               --severity-threshold=${severity} \

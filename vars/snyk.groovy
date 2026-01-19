@@ -19,6 +19,15 @@ def call(Map c = [:]) {
               --org=${snykOrg} \
               --project-name=${projectName} \
               ${failOn == false ? '|| true' : ''}
+
+            snyk-to-html -i \
+            /var/jenkins_home/workspace/shared_lib_test/2026-01-19_snyk_report.json
+
+            snyk monitor \
+              --severity-threshold=${severity} \
+              --org=${snykOrg} \
+              --project-name=${projectName} \
+              ${failOn == false ? '|| true' : ''}
         """
     }
 }
